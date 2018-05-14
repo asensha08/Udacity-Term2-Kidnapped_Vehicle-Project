@@ -194,7 +194,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       // Multivariate Gaussian
       double s_x = std_landmark[0];
       double s_y = std_landmark[1];
-      double obs_w = ( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(pred_x-trans_obs_x,2)/(2*pow(s_x, 2)) + (pow(pred_y-trans_obs_y,2)/(2*pow(s_y, 2))) ) );
+      double obs_w = (1/(2*M_PI*s_x*s_y)) * exp( -( pow(pred_x-trans_obs_x,2)/(2*pow(s_x, 2)) + (pow(pred_y-trans_obs_y,2)/(2*pow(s_y, 2)))));
 
       // Weight Calculation
       particles[i].weight *= obs_w;

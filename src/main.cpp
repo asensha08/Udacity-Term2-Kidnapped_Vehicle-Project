@@ -66,6 +66,7 @@ int main()
 
 
           if (!pf.initialized()) {
+            cout<<"Initialising"<<endl;
 
           	// Sense noisy position data from the simulator
 			double sense_x = std::stod(j[1]["sense_x"].get<std::string>());
@@ -73,13 +74,15 @@ int main()
 			double sense_theta = std::stod(j[1]["sense_theta"].get<std::string>());
 
 			pf.init(sense_x, sense_y, sense_theta, sigma_pos);
+      cout<<"Initialisation Done"<<endl;
 		  }
 		  else {
 			// Predict the vehicle's next state from previous (noiseless control) data.
-		  	double previous_velocity = std::stod(j[1]["previous_velocity"].get<std::string>());
+		  double previous_velocity = std::stod(j[1]["previous_velocity"].get<std::string>());
 			double previous_yawrate = std::stod(j[1]["previous_yawrate"].get<std::string>());
 
 			pf.prediction(delta_t, sigma_pos, previous_velocity, previous_yawrate);
+      //cout<<"Prediction Done"<<endl;
 		  }
 
 		  // receive noisy observation data from the simulator
@@ -102,7 +105,7 @@ int main()
         	std::istream_iterator<float>(),
         	std::back_inserter(y_sense));
 
-        	for(int i = 0; i < x_sense.size(); i++)
+        	for(unsigned int i = 0; i < x_sense.size(); i++)
         	{
         		LandmarkObs obs;
         		obs.x = x_sense[i];
@@ -112,7 +115,10 @@ int main()
 
 		  // Update the weights and resample
 		  pf.updateWeights(sensor_range, sigma_landmark, noisy_observations, map);
+      //cout<<"Weight Update Done"<<endl;
+
 		  pf.resample();
+      //cout<<"Resampling Done"<<endl;
 
 		  // Calculate and output the average weighted error of the particle filter over all time steps so far.
 		  vector<Particle> particles = pf.particles;
@@ -120,7 +126,7 @@ int main()
 		  double highest_weight = -1.0;
 		  Particle best_particle;
 		  double weight_sum = 0.0;
-		  for (int i = 0; i < num_particles; ++i) {
+		  for (int i = 0; i<num_particles; i++) {
 			if (particles[i].weight > highest_weight) {
 				highest_weight = particles[i].weight;
 				best_particle = particles[i];
